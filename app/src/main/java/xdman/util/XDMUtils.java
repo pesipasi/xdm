@@ -78,24 +78,56 @@ public class XDMUtils {
 			if (uri.equals("/") || uri.length() < 1) {
 				return "FILE";
 			}
-			int x = uri.lastIndexOf("/");
+
+
 			String path = uri;
-			if (x > -1) {
-				path = uri.substring(x);
+			String url = uri;
+			
+			if (url.startsWith("http://") || url.startsWith("https://")
+					|| url.startsWith("ftp://") || url.startsWith("www.")) {
+				try {
+					if (uri == null)
+						return "FILE";
+					if (uri.equals("/") || uri.length() < 1) {
+						return "FILE";
+					}
+					int x = uri.lastIndexOf("/");
+					
+					if (x > -1) {
+						path = uri.substring(x+1);
+					}
+					int qindex = path.indexOf("?");
+					if (qindex > -1) {
+						path = path.substring(0, qindex);
+					}
+					path = decodeFileName(path);
+					if (path.length() < 1)
+						return "FILE";
+					if (path.equals("/"))
+						return "FILE";
+					return createSafeFileName(path);
+				} catch (Exception e) {
+					Logger.log(e);
+					return "FILE";
+					}
 			}
+			
+
 			int qindex = path.indexOf("?");
 			if (qindex > -1) {
-				path = path.substring(0, qindex);
+				uri = path.substring(0, qindex);
 			}
-			path = decodeFileName(path);
+			path = decodeFileName(uri);
 			if (path.length() < 1)
 				return "FILE";
 			if (path.equals("/"))
 				return "FILE";
 			return createSafeFileName(path);
+
+			
 		} catch (Exception e) {
-			Logger.log(e);
-			return "FILE";
+
+			return uri;
 		}
 	}
 
