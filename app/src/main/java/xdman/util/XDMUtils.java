@@ -57,7 +57,7 @@ public class XDMUtils {
 			if (ch[i] == '/' || ch[i] == '\\' || ch[i] == '"' || ch[i] == '?'
 					|| ch[i] == '*' || ch[i] == '<' || ch[i] == '>'
 					|| ch[i] == ':')
-				continue;
+				ch[i] = '-';
 			if (ch[i] == '%') {
 				if (i + 2 < ch.length) {
 					int c = Integer.parseInt(ch[i + 1] + "" + ch[i + 2], 16);
